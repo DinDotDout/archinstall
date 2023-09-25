@@ -90,4 +90,3 @@ cp 3-after-install.sh /mnt/archinstall/
 # Chroot to installed sytem
 # ------------------------------------------------------
 arch-chroot /mnt ./archinstall/2-configuration.sh
-
