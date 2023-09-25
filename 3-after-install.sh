@@ -7,7 +7,7 @@ echo "DONE!"
 echo "Installing Paru pckgs!"
 paru --noconfirm --needed -S neovim-remote stow \
 	catppuccin-gtk-theme-macchiato catppuccin-cursors-mocha \
-	protonup-qt timeshift zram-generaton preload
+	protonup-qt timeshift zram-generator preload
 echo "DONE!"
 clear
 
