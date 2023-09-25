@@ -11,7 +11,7 @@
 clear
 keyboardlayout="us"
 zoneinfo="Europe/Madrid"
-hostname="archdot"
+hostname="arch"
 username="joan"
 
 # ------------------------------------------------------
@@ -39,8 +39,6 @@ while true; do
   read -p "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
     case $an in
         [Nn]* ) 
-            echo "Adding nvidia-dkms"
-            pacman --needed --noconfirm -S nvidia-dkms
             # ------------------------------------------------------
             # add nvidia hook
             # ------------------------------------------------------
@@ -61,6 +59,8 @@ while true; do
             NeedsTargets
             Exec=/bin/sh -c 'while read -r trg; do case $trg in linux*) exit 0; esac; done; /usr/bin/mkinitcpio -P'
             " >> /etc/pacman.d/hooks/nvidia.hook
+            echo "Adding nvidia-dkms"
+            pacman --needed --noconfirm -S nvidia-dkms
         break;;
         [aA]* )
             echo "Adding xf86-video-amdgpu"
@@ -98,7 +98,7 @@ echo "LANG=en_US.UTF-8" >> /etc/locale.conf
 # ------------------------------------------------------
 # Set Keyboard
 # ------------------------------------------------------
-echo "FONT=ter-v18n" >> /etc/vconsole.conf
+# echo "FONT=ter-v18n" >> /etc/vconsole.conf
 echo "KEYMAP=$keyboardlayout" >> /etc/vconsole.conf
 
 # ------------------------------------------------------
