@@ -15,7 +15,7 @@ echo ""
 lsblk
 read -p "Enter the name of the EFI partition (eg. nvme0np1): " nvme0n1p1
 read -p "Enter the name of the ROOT partition (eg. nvme0np2): " nvme0n1p2
-read -p "Enter the name of the VM partition (keep it empty if not required): "nvme0n1p3
+# read -p "Enter the name of the VM partition (keep it empty if not required): " nvme0n1p3
 
 # ------------------------------------------------------
 # Sync time
@@ -27,7 +27,7 @@ timedatectl set-ntp true
 # ------------------------------------------------------
 mkfs.fat -F 32 /dev/$nvme0n1p1;
 mkfs.btrfs -f /dev/$nvme0n1p2
-mkfs.btrfs -f /dev/$nvme0n1p3
+# mkfs.btrfs -f /dev/$nvme0n1p3
 
 # ------------------------------------------------------
 # Mount points for btrfs
@@ -47,8 +47,8 @@ mount -o compress=zstd:1,noatime,subvol=@home /dev/$nvme0n1p2 /mnt/home
 mount -o compress=zstd:1,noatime,subvol=@log /dev/$nvme0n1p2 /mnt/var/log
 mount -o compress=zstd:1,noatime,subvol=@snapshots /dev/$nvme0n1p2 /mnt/.snapshots
 mount /dev/$nvme0n1p1 /mnt/boot/efi
-mkdir /mnt/vm
-mount /dev/$nvme0n1p3 /mnt/vm
+
+# mount /dev/$nvme0n1p3 /mnt/vm
 
 # ------------------------------------------------------
 # Install base packages
