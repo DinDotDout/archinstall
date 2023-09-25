@@ -1,3 +1,4 @@
+#!/bin/bash
 clear
 echo "Installing paru!"
 git clone https://aur.archlinux.org/paru-git.git
@@ -26,9 +27,9 @@ echo "DONE!"
 clear
 
 # git clone git@github.com:DinDotDout/.dotfilesV2.git
-git clone https://github.com/DinDotDout/.dotfilesV2
-(cd .dotfilesV2
-	stow base-conf)
+git clone https://github.com/DinDotDout/.dotfilesV2 $HOME/.dotfiles
+cd $HOME/.dotfiles
+stow -R base-conf
 xdg-user-dirs-update
 
 echo "Changing to zsh shell"
@@ -50,13 +51,11 @@ while true; do
     case $hin in
         [hH]* )
             echo "Hyprland configuration started."
-            (cd .dotfilesV2
-            source hyprland-install.sh)
+            source hyprland-install.sh
         break;;
         [iI]* ) 
             echo "I3 configuration started."
-            (cd .dotfilesV2
-            source i3-install.sh)
+            source i3-install.sh
         break;;
         [nN]* )
         break;;
