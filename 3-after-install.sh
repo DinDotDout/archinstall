@@ -25,8 +25,10 @@ echo "DONE!"
 
 clear
 
-git clone git@github.com:DinDotDout/.dotfilesV2.git
-(cd .dotfiles stow base-conf)
+# git clone git@github.com:DinDotDout/.dotfilesV2.git
+git clone https://github.com/DinDotDout/.dotfilesV2
+(cd .dotfilesV2
+	stow base-conf)
 xdg-user-dirs-update
 
 echo "Changing to zsh shell"
@@ -48,14 +50,15 @@ while true; do
     case $hin in
         [hH]* )
             echo "Hyprland configuration started."
-            source hyprland-install.sh
+            (cd .dotfilesV2
+            source hyprland-install.sh)
         break;;
         [iI]* ) 
             echo "I3 configuration started."
-            source i3-install.sh
+            (cd .dotfilesV2
+            source i3-install.sh)
         break;;
         [nN]* )
-            # exit;
         break;;
         * ) echo "Please answer i, h or x.";;
     esac
