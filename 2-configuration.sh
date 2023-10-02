@@ -82,7 +82,7 @@ pacman --needed --noconfirm -S grub xdg-desktop-portal-wlr \
   sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop \
   ranger neofetch duf xorg xorg-xinit grub-btrfs nvidia-dkms \
   brightnessctl pacman-contrib git feh curl zsh \
-	alacritty neovim firefox  man-db \
+	alacritty neovim firefox  man-db udisks2 \
 	man-pages rofi ripgrep telegram-desktop \
 	zip unzip  gtk3 lxappearance-gtk3  ttf-hack zathura \
 	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol \
