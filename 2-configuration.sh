@@ -75,17 +75,18 @@ done
 
 pacman --needed --noconfirm -S grub xdg-desktop-portal-wlr \
   efibootmgr networkmanager network-manager-applet dialog wpa_supplicant\
-  mtools dosfstools base-devel linux-headers avahi xdg-user-dirs xdg-utils\
-  gvfs gvfs-smb nfs-utils inetutils dnsutils bluez bluez-utils cups hplip \
-  alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack bash-completion \
+  mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils\
+  inetutils bluez bluez-utils cups hplip \
+  alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack \
   openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld \
-  flatpak sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop \
+  sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop \
   ranger neofetch duf xorg xorg-xinit grub-btrfs nvidia-dkms \
   brightnessctl pacman-contrib git feh curl zsh \
 	alacritty neovim firefox  man-db \
 	man-pages rofi ripgrep telegram-desktop \
 	zip unzip  gtk3 lxappearance-gtk3  ttf-hack zathura \
-	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol
+	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol \
+  virt-manager virt-viewer qemu vde2 ebtables iptables-nft nftables dnsmasq bridge-utils ovmf swtpm
 
 
 # ------------------------------------------------------
