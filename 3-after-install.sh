@@ -47,7 +47,7 @@ echo "Enabling new display manager service"
 systemctl enable ly.service
 
 while true; do
-  read -p "Do you want to install i3 or hyprland? (iI/hY/Xx(None)): " hin
+  read -p "Do you want to install i3 or hyprland? (hH/iI/Xx(None)): " hin
     case $hin in
         [hH]* )
             echo "Hyprland configuration started."
