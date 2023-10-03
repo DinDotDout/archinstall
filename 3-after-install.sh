@@ -51,11 +51,11 @@ while true; do
     case $hin in
         [hH]* )
             echo "Hyprland configuration started."
-            source hyprland-install.sh
+            source install-hyprland.sh
         break;;
         [iI]* ) 
             echo "I3 configuration started."
-            source i3-install.sh
+            source install-i3.sh
         break;;
         [nN]* )
         break;;
