@@ -85,7 +85,7 @@ cat /mnt/etc/fstab
 mkdir /mnt/archinstall
 cp 2-configuration.sh /mnt/archinstall/
 cp 3-after-install.sh /mnt/archinstall/
-
+cp kvm.sh /mnt/archinstall/
 # ------------------------------------------------------
 # Chroot to installed sytem
 # ------------------------------------------------------
