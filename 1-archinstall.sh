@@ -41,7 +41,7 @@ btrfs su cr /mnt/@log
 umount /mnt
 
 mount -o compress=zstd:1,noatime,subvol=@ /dev/$nvme0n1p2 /mnt
-mkdir -p /mnt/{boot/efi,home,.snapshots,var/{cache,log}}
+mkdir -p /mnt/{boot/efi,home,.snapshots,var/{cache,log},vm}
 mount -o compress=zstd:1,noatime,subvol=@cache /dev/$nvme0n1p2 /mnt/var/cache
 mount -o compress=zstd:1,noatime,subvol=@home /dev/$nvme0n1p2 /mnt/home
 mount -o compress=zstd:1,noatime,subvol=@log /dev/$nvme0n1p2 /mnt/var/log
