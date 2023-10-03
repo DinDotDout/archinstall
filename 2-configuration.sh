@@ -161,6 +161,7 @@ usermod -aG wheel $username
 # Copy installation scripts to home directory 
 # ------------------------------------------------------
 cp /archinstall/3-after-install.sh /home/$username
+cp /archinstall/kvm.sh /home/$username
 
 clear
 echo "     _                   "
