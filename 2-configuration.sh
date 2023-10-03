@@ -43,23 +43,22 @@ while true; do
             # ------------------------------------------------------
             mkdir /etc/pacman.d/hooks/
             if ! [ -f "/etc/pacman.d/hooks/nvidia.hook" ]; then
-              echo "
-              [Trigger]
-              Operation=Install
-              Operation=Upgrade
-              Operation=Remove
-              Type=Package
-              Target=nvidia-dkms
-              Target=linux
-              # Change the linux part above if a different kernel is used
+              echo "[Trigger]
+Operation=Install
+Operation=Upgrade
+Operation=Remove
+Type=Package
+Target=nvidia-dkms
+Target=linux
+# Change the linux part above if a different kernel is used
 
-              [Action]
-              Description=Update NVIDIA module in initcpio
-              Depends=mkinitcpio
-              When=PostTransaction
-              NeedsTargets
-              Exec=/bin/sh -c 'while read -r trg; do case $trg in linux*) exit 0; esac; done; /usr/bin/mkinitcpio -P'
-              " >> /etc/pacman.d/hooks/nvidia.hook
+[Action]
+Description=Update NVIDIA module in initcpio
+Depends=mkinitcpio
+When=PostTransaction
+NeedsTargets
+Exec=/bin/sh -c 'while read -r trg; do case $trg in linux*) exit 0; esac; done; /usr/bin/mkinitcpio -P'
+" >> /etc/pacman.d/hooks/nvidia.hook
               echo "Adding nvidia-dkms"
             fi
             pacman --needed --noconfirm -S nvidia-dkms
