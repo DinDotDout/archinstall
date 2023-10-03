@@ -29,7 +29,7 @@ clear
 # git clone git@github.com:DinDotDout/.dotfilesV2.git
 git clone https://github.com/DinDotDout/.dotfilesV2 $HOME/.dotfiles
 cd $HOME/.dotfiles
-stow -R base-conf
+stow -R conf-base
 xdg-user-dirs-update
 
 echo "Changing to zsh shell"
