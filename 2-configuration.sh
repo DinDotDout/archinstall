@@ -87,9 +87,7 @@ pacman --needed --noconfirm -S grub xdg-desktop-portal-wlr \
 	alacritty neovim firefox  man-db udisks2 \
 	man-pages rofi ripgrep telegram-desktop \
 	zip unzip  gtk3 lxappearance-gtk3  ttf-hack zathura \
-	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol \
-  virt-manager virt-viewer qemu vde2 ebtables iptables-nft nftables dnsmasq bridge-utils ovmf swtpm
-
+	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol
 
 # ------------------------------------------------------
 # set lang utf8 US
