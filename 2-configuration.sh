@@ -12,7 +12,37 @@ keyboardlayout="us"
 zoneinfo="Europe/Madrid"
 hostname="arch"
 username="joan"
+while true; do
+    read -sp "Enter your password: " password
+    echo # This echo command is for a newline after the password input
+    read -sp "Confirm your password: " password_confirm
+    echo # This echo command is for a newline after the password input
 
+    if [ "$password" == "$password_confirm" ]; then
+        echo "Passwords match."
+        break
+    else
+        clear
+        echo "Passwords do not match. Please try again."
+    fi
+done
+
+# Manage all user prompts
+graphics_driver=""
+while true; do
+    read -p "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
+    case $an in
+        [Nn]* ) 
+            graphics_driver="nvidia-dkms"
+            break;;
+        [aA]* )
+            graphics_driver="xf86-video-amdgpu"
+            break;;
+        [xX]* )
+            break;;
+        * ) echo "Please answer n, a or x.";;
+    esac
+done
 # ------------------------------------------------------
 # Set System Time
 # ------------------------------------------------------
@@ -33,61 +63,22 @@ pacman -Syy
 # ------------------------------------------------------
 # Install Packages
 # ------------------------------------------------------
+packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet \
+  dialog wpa_supplicant mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils \
+  inetutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse \
+  pipewire-jack openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld \
+  sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop ranger neofetch duf xorg \
+  xorg-xinit grub-btrfs brightnessctl pacman-contrib git feh curl zsh alacritty neovim \
+  firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3 \
+  lxappearance-gtk3 ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight pavucontrol)
 
-while true; do
-  read -p "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
-    case $an in
-        [Nn]* ) 
-            # ------------------------------------------------------
-            # add nvidia hook
-            # ------------------------------------------------------
-            mkdir /etc/pacman.d/hooks/
-            if ! [ -f "/etc/pacman.d/hooks/nvidia.hook" ]; then
-              echo "[Trigger]
-Operation=Install
-Operation=Upgrade
-Operation=Remove
-Type=Package
-Target=nvidia-dkms
-Target=linux
-# Change the linux part above if a different kernel is used
+if [[ ! -z "$graphics_driver" ]]; then
+    packages+=($graphics_driver)
+    mkdir -p /etc/pacman.d/hooks/
+    cp ./archinstall/nvidia.hook /etc/pacman.d/hooks/nvidia.hook
+fi
 
-[Action]
-Description=Update NVIDIA module in initcpio
-Depends=mkinitcpio
-When=PostTransaction
-NeedsTargets
-Exec=/bin/sh -c 'while read -r trg; do case $trg in linux*) exit 0; esac; done; /usr/bin/mkinitcpio -P'
-" >> /etc/pacman.d/hooks/nvidia.hook
-              echo "Adding nvidia-dkms"
-            fi
-            pacman --needed --noconfirm -S nvidia-dkms
-        break;;
-        [aA]* )
-            echo "Adding xf86-video-amdgpu"
-            pacman --needed --noconfirm -S xf86-video-amdgpu
-        break;;
-        [xX]* )
-            exit;
-        break;;
-        * ) echo "Please answer n, a or x.";;
-    esac
-done
-
-pacman --needed --noconfirm -S grub xdg-desktop-portal-wlr \
-  efibootmgr networkmanager network-manager-applet dialog wpa_supplicant\
-  mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils\
-  inetutils bluez bluez-utils cups hplip \
-  alsa-utils pipewire pipewire-alsa pipewire-pulse pipewire-jack \
-  openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld \
-  sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop \
-  ranger neofetch duf xorg xorg-xinit grub-btrfs nvidia-dkms \
-  brightnessctl pacman-contrib git feh curl zsh \
-	alacritty neovim firefox  man-db udisks2 \
-	man-pages rofi ripgrep telegram-desktop \
-	zip unzip  gtk3 lxappearance-gtk3  ttf-hack zathura \
-	zathura-pdf-mupdf ueberzug ly mlocate lf filelight pavucontrol
-
+pacman --needed --noconfirm -S "${packages[@]}"
 # ------------------------------------------------------
 # set lang utf8 US
 # ------------------------------------------------------
@@ -115,7 +106,7 @@ clear
 # ------------------------------------------------------
 echo "Add user $username"
 useradd -m -G wheel $username
-passwd $username
+echo "$username:password" | chpasswd -c DES
 
 # ------------------------------------------------------
 # Enable Services
@@ -148,13 +139,9 @@ mkinitcpio -p linux
 # Add user to wheel
 # ------------------------------------------------------
 clear
-echo "Uncomment %wheel group in sudoers (around line 85):"
-echo "Before: #%wheel ALL=(ALL:ALL) ALL"
-echo "After:  %wheel ALL=(ALL:ALL) ALL"
-echo ""
-read -p "Open sudoers on press" c
-EDITOR=vim sudo -E visudo
+echo "Adding user to wheel group and uncommenting sudoers file"
 usermod -aG wheel $username
+EDITOR='sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/"' visudo
 
 # ------------------------------------------------------
 # Copy installation scripts to home directory 

@@ -16,6 +16,22 @@ lsblk
 read -p "Enter the name of the EFI partition (eg. nvme0np1): " nvme0n1p1
 read -p "Enter the name of the ROOT partition (eg. nvme0np2): " nvme0n1p2
 read -p "Enter the name of the VM partition (keep it empty if not required): " nvme0n1p3
+cpu_microcode=""
+while true; do
+    read -p "Do you use intel or amd cpu? (Ii (intel), Aa (amd) or Xx (None)): " ai
+    case $ai in
+        [iI]* ) 
+            cpu_microcode="intel-ucode"
+            break;;
+        [aA]* )
+            cpu_microcode="amd-ucode"
+            break;;
+        [xX]* )
+            echo "No additional CPU microcode will be added."
+            break;;
+        * ) echo "Please answer i, a or x.";;
+    esac
+done
 
 # ------------------------------------------------------
 # Sync time
@@ -53,25 +69,7 @@ mount /dev/$nvme0n1p3 /mnt/vm
 # ------------------------------------------------------
 # Install base packages
 # ------------------------------------------------------
-while true; do
-  read -p "Do you use intel or amd cpu? (Ii (intel), Aa (amd) or Xx (None)): " ai
-    case $ai in
-        [iI]* ) 
-            echo "Adding intel"
-            pacstrap -K /mnt intel-ucode
-        break;;
-        [aA]* )
-            echo "Adding amd"
-            pacstrap -K /mnt amd-ucode
-        break;;
-        [xX]* )
-            exit;
-        break;;
-        * ) echo "Please answer i, h or no.";;
-    esac
-done
-
-pacstrap -K /mnt base base-devel git linux linux-firmware vim openssh reflector rsync
+sudo pacman -S --needed base base-devel git linux linux-firmware vim openssh reflector rsync $cpu_microcode
 
 # ------------------------------------------------------
 # Generate fstab
@@ -83,6 +81,7 @@ cat /mnt/etc/fstab
 # Install configuration scripts
 # ------------------------------------------------------
 mkdir /mnt/archinstall
+cp nvidia.hook /mnt/archinstall/
 cp 2-configuration.sh /mnt/archinstall/
 cp 3-after-install.sh /mnt/archinstall/
 cp kvm.sh /mnt/archinstall/
