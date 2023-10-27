@@ -19,7 +19,6 @@ get_user_input() {
 	read -rp "Enter the name of the ROOT partition (eg. nvme0n1p2): " nvme0n1p2
 	read -rp "Enter the name of the VM partition (keep it empty if not required): " nvme0n1p3
 
-	# cpu to be used
 	cpu_microcode=""
 	while true; do
 		read -rp "Do you use intel or amd cpu? (Ii (intel), Aa (amd) or Xx (None)): " ai
@@ -54,17 +53,16 @@ get_user_input() {
 		fi
 	done
 
-	# Manage all user prompts
-	graphics_driver=""
+	graphics_drivers=""
 	while true; do
 		read -rp "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
 		case $an in
 		[Nn]*)
-			graphics_driver="nvidia-dkms"
+			graphics_drivers="nvidia-dkms"
 			break
 			;;
 		[aA]*)
-			graphics_driver="xf86-video-amdgpu"
+			graphics_drivers="xf86-video-amdgpu"
 			break
 			;;
 		[xX]*)
@@ -144,7 +142,7 @@ main() {
 	cp 2-configuration.sh /mnt/root/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source \$HOME/archintall/2-configuration;
-      configuration "${usrpasswd}" "${graphics_driver}"
+      configuration "${usrpasswd}" "${graphics_drivers}"
 EOCHROOT
 	find /mnt/root/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
 	rm -r /mnt/root/archinstall/
