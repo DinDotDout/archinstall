@@ -143,7 +143,6 @@ installation() {
 	install_base_pcks
 	generate_fstab
 	timedatectl set-ntp true
-
 }
 
 cleanup_on_fail() {
@@ -169,14 +168,16 @@ main() {
 	installation
 
 	mkdir /mnt/archinstall
-	cp -R resources/ /mnt/root/archinstall/resources/
-	cp 2-configuration.sh /mnt/root/archinstall/
+	mkdir /mnt/archinstall/resources
+
+	cp -R resources/ /mnt/archinstall/resources/
+	cp 2-configuration.sh /mnt/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
-      source \$HOME/archintall/2-configuration;
+      source archinstall/2-configuration.sh;
       configuration "${usrpasswd}" "${graphics_drivers}"
 EOCHROOT
-	find /mnt/root/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
-	rm -r /mnt/root/archinstall/
+	find /mnt/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
+	rm -r /mnt/archinstall/
 }
 trap cleanup_on_fail EXIT
 main
