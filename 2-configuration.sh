@@ -88,12 +88,12 @@ configure_initramfs() {
 	mkinitcpio -p linux
 }
 
-add_repo() {
-	read -rp "Enter the repository URL: " repo_url
-	git clone "$repo_url" /home/"$username"/ || {
-		echo 'Failed to clone repository, try another url.'
-	}
-}
+# add_repo() {
+# 	read -rp "Enter the repository URL: " repo_url
+# 	git clone "$repo_url" /home/"$username"/ || {
+# 		echo 'Failed to clone repository, try another url.'
+# 	}
+# }
 
 add_repos() {
 	if [ -n "$dotfiles" ]; then
@@ -102,19 +102,19 @@ add_repos() {
 			echo 'Failed to clone dotfiles'
 		}
 	fi
-
-	while true; do
-		read -rp "Do you want to clone a repository? (Yy/Nn): " yn
-		case $yn in
-		[yY]*)
-			add_repo
-			;;
-		[nN]*)
-			break
-			;;
-		*) echo "Please answer (Yy/Nn)" ;;
-		esac
-	done
+	#
+	# while true; do
+	# 	read -rp "Do you want to clone a repository? (Yy/Nn): " yn
+	# 	case $yn in
+	# 	[yY]*)
+	# 		add_repo
+	# 		;;
+	# 	[nN]*)
+	# 		break
+	# 		;;
+	# 	*) echo "Please answer (Yy/Nn)" ;;
+	# 	esac
+	# done
 }
 
 configuration() {
