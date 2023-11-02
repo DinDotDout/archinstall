@@ -110,7 +110,7 @@ mount_partitions() {
 	mkdir -p /mnt/{boot/efi,home,.snapshots,var/{cache,log}}
 	mount -o compress=zstd:1,noatime,subvol=@cache /dev/"$nvme0n1p2" /mnt/var/cache
 	mount -o compress=zstd:1,noatime,subvol=@home /dev/"$nvme0n1p2" /mnt/home
-	mount -o compress=zstd:1,noatime,subvol=@log /dev/"$nvme0n1p2 /mnt/var/log"
+	mount -o compress=zstd:1,noatime,subvol=@log /dev/"$nvme0n1p2" /mnt/var/log
 	mount -o compress=zstd:1,noatime,subvol=@snapshots /dev/"$nvme0n1p2" /mnt/.snapshots
 	mount "/dev/$nvme0n1p1" /mnt/boot/efi && mounted_nvme0n1p1=1
 
