@@ -138,7 +138,7 @@ main() {
 	archinstall
 
 	mkdir /mnt/archinstall
-	cp -R resources/ /mnt/root/archinstall/
+	cp -R resources/ /mnt/root/archinstall/resources/
 	cp 2-configuration.sh /mnt/root/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source \$HOME/archintall/2-configuration;

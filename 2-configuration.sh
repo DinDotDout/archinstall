@@ -4,7 +4,7 @@ keyboardlayout="us"
 zoneinfo="Europe/Madrid"
 hostname="arch_joan"
 username="joan"
-dotfiles="https://github.com/DinDotDout/.dotfilesV2"
+dotfiles="https://github.com/DinDotDout/.dotfiles"
 
 setup_time() {
 	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
@@ -30,7 +30,7 @@ install_pcks() {
 	if [[ -n "$graphics_drivers" ]]; then
 		packages+=("$graphics_drivers")
 		mkdir -p /etc/pacman.d/hooks/
-		cp ./archinstall/nvidia.hook /etc/pacman.d/hooks/nvidia.hook
+		cp ./archinstall/resources/nvidia.hook /etc/pacman.d/hooks/nvidia.hook
 	fi
 	pacman --needed --noconfirm -S "${packages[@]}" || {
 		echo 'Failed to install packages.'
