@@ -172,7 +172,7 @@ main() {
 
 	cp -R resources/ /mnt/archinstall/resources/
 	cp 2-configuration.sh /mnt/archinstall/
-	arch-chroot /mnt -- <<EOCHROOT
+	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source archinstall/2-configuration.sh;
       configuration "${usrpasswd}" "${graphics_drivers}"
 EOCHROOT
