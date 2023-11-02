@@ -90,7 +90,7 @@ configure_initramfs() {
 
 # add_repo() {
 # 	read -rp "Enter the repository URL: " repo_url
-# 	git clone "$repo_url" /home/"$username"/ || {
+# 	sudo -u $username git clone "$repo_url" /home/"$username"/ || {
 # 		echo 'Failed to clone repository, try another url.'
 # 	}
 # }
@@ -98,7 +98,7 @@ configure_initramfs() {
 add_repos() {
 	if [ -n "$dotfiles" ]; then
 		echo "Cloning dotfiles"
-		git clone "$dotfiles" /home/"$username"/.dotfiles || {
+		sudo -u $username git clone "$dotfiles" /home/"$username"/.dotfiles || {
 			echo 'Failed to clone dotfiles'
 		}
 	fi
