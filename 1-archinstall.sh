@@ -39,20 +39,6 @@ get_user_input() {
 		esac
 	done
 
-	while true; do
-		read -rsp "Enter your user password: " usrpasswd
-		echo
-		read -rsp "Confirm your user password: " password_confirm
-		echo
-		if [ "$usrpasswd" == "$password_confirm" ]; then
-			echo "Passwords match."
-			break
-		else
-			clear
-			echo "Passwords do not match. Please try again."
-		fi
-	done
-
 	graphics_drivers=""
 	while true; do
 		read -rp "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
@@ -71,6 +57,21 @@ get_user_input() {
 		*) echo "Please answer n, a or x." ;;
 		esac
 	done
+
+	while true; do
+		read -rsp "Enter your user password: " usrpasswd
+		echo
+		read -rsp "Confirm your user password: " password_confirm
+		echo
+		if [ "$usrpasswd" == "$password_confirm" ]; then
+			echo "Passwords match."
+			break
+		else
+			clear
+			echo "Passwords do not match. Please try again."
+		fi
+	done
+
 }
 
 format_partitions() {
