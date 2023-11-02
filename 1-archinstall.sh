@@ -1,4 +1,8 @@
 #!/bin/bash
+mounted_nvme0n1p1=0
+mounted_nvme0n1p2=0
+mounted_nvme0n1p3=0
+
 welcome_message() {
 	clear
 	echo "    _             _       ___           _        _ _ "
@@ -95,7 +99,7 @@ mount_partitions() {
 	# ------------------------------------------------------
 	# Mount points for btrfs
 	# ------------------------------------------------------
-	mount /dev/"$nvme0n1p2" /mnt
+	mount /dev/"$nvme0n1p2" /mnt && mounted_nvme0n1p2=1
 	btrfs su cr /mnt/@
 	btrfs su cr /mnt/@cache
 	btrfs su cr /mnt/@home
@@ -109,10 +113,11 @@ mount_partitions() {
 	mount -o compress=zstd:1,noatime,subvol=@home /dev/"$nvme0n1p2" /mnt/home
 	mount -o compress=zstd:1,noatime,subvol=@log /dev/"$nvme0n1p2 /mnt/var/log"
 	mount -o compress=zstd:1,noatime,subvol=@snapshots /dev/"$nvme0n1p2" /mnt/.snapshots
-	mount "/dev/$nvme0n1p1" /mnt/boot/efi
+	mount "/dev/$nvme0n1p1" /mnt/boot/efi && mounted_nvme0n1p1=1
+
 	if [ -n "$nvme0n1p3" ]; then
 		mkdir -p /mnt/vm
-		mount "/dev/$nvme0n1p3" /mnt/vm
+		mount "/dev/$nvme0n1p3" /mnt/vm && mounted_nvme0n1p3=1
 	fi
 }
 
@@ -142,6 +147,23 @@ installation() {
 
 }
 
+cleanup_on_fail() {
+	echo "Unmounting all"
+	if [ "$mounted_nvme0n1p3" -eq 1 ]; then
+		umount "/mnt/vm"
+	fi
+	if [ "$mounted_nvme0n1p2" -eq 1 ]; then
+		umount "/mnt/var/cache"
+		umount "/mnt/home"
+		umount "/mnt/var/log"
+		umount "/mnt/.snapshots"
+		umount "/mnt"
+	fi
+	if [ "$mounted_nvme0n1p1" -eq 1 ]; then
+		umount "/mnt/boot/efi"
+	fi
+}
+
 main() {
 	welcome_message
 	get_user_input
@@ -157,5 +179,5 @@ EOCHROOT
 	find /mnt/root/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
 	rm -r /mnt/root/archinstall/
 }
-
+trap cleanup_on_fail EXIT
 main
