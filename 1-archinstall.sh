@@ -71,7 +71,6 @@ get_user_input() {
 			echo "Passwords match."
 			break
 		else
-			clear
 			echo "Passwords do not match. Please try again."
 		fi
 	done
@@ -152,15 +151,15 @@ cleanup_on_fail() {
 	if [ "$mounted_nvme0n1p3" -eq 1 ]; then
 		umount "/mnt/vm"
 	fi
+	if [ "$mounted_nvme0n1p1" -eq 1 ]; then
+		umount "/mnt/boot/efi"
+	fi
 	if [ "$mounted_nvme0n1p2" -eq 1 ]; then
 		umount "/mnt/var/cache"
 		umount "/mnt/home"
 		umount "/mnt/var/log"
 		umount "/mnt/.snapshots"
 		umount "/mnt"
-	fi
-	if [ "$mounted_nvme0n1p1" -eq 1 ]; then
-		umount "/mnt/boot/efi"
 	fi
 }
 
