@@ -122,7 +122,7 @@ mount_partitions() {
 
 install_base_pcks() {
 	base_packages=(base base-devel git linux linux-firmware vim openssh reflector rsync "$cpu_microcode")
-	pacman -S --needed --noconfirm "${base_packages[@]}" ||
+	pacstrap -K /mnt --needed --noconfirm "${base_packages[@]}" ||
 		{
 			echo 'Failed to install base packages.'
 			exit 1
