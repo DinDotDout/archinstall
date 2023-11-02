@@ -179,5 +179,6 @@ EOCHROOT
 	find /mnt/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
 	rm -r /mnt/archinstall/
 }
-trap cleanup_on_fail EXIT
+
+trap cleanup_on_fail ERR
 main
