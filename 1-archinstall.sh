@@ -133,10 +133,19 @@ generate_fstab() {
 	cat /mnt/etc/fstab
 }
 
+installation() {
+	format_partitions
+	mount_partitions
+	install_base_pcks
+	generate_fstab
+	timedatectl set-ntp true
+
+}
+
 main() {
 	welcome_message
 	get_user_input
-	archinstall
+	installation
 
 	mkdir /mnt/archinstall
 	cp -R resources/ /mnt/root/archinstall/resources/
