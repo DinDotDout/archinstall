@@ -24,8 +24,9 @@ install_pcks() {
 		sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop ranger neofetch duf xorg
 		xorg-xinit grub-btrfs brightnessctl pacman-contrib git feh curl zsh alacritty neovim
 		firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3
-		lxappearance-gtk3 ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
-		pavucontrol btop)
+		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
+		pavucontrol btop papirus-icon-theme
+	)
 
 	if [[ -n "$graphics_drivers" ]]; then
 		packages+=("$graphics_drivers")
