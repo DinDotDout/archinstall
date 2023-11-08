@@ -52,7 +52,7 @@ get_user_input() {
 			break
 			;;
 		[aA]*)
-			graphics_drivers="xf86-video-amdgpu"
+			graphics_drivers="lib32-mesa mesa-utils vulkan-radeon lib32-vulkan-radeon libva-mesa-dirver lib32-mesa-dirver xf86-video-amdgpu "
 			break
 			;;
 		[xX]*)
