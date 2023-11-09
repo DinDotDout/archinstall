@@ -183,7 +183,7 @@ main() {
 	cp 2-configuration.sh /mnt/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source archinstall/2-configuration.sh;
-      configuration "${usrpasswd}" "${graphics_drivers[@]}" "${add_nvidia_hook}"
+      configuration "${usrpasswd}" "${add_nvidia_hook}" "${graphics_drivers[@]}"
 EOCHROOT
 }
 

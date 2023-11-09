@@ -17,8 +17,9 @@ setup_time() {
 }
 
 install_pcks() {
-	local graphics_drivers=$1
-	local add_nvidia_hook=$2
+	local add_nvidia_hook=$1
+	shift
+	local -a graphics_drivers=("$@")
 	echo "Start reflector..."
 	reflector -c "Spain" -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 	pacman -Syy
@@ -32,7 +33,6 @@ install_pcks() {
 		firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3
 		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
 		pavucontrol btop papirus-icon-theme "${graphics_drivers[@]}"
-
 	)
 
 	if [ "$add_nvidia_hook" = true ]; then
@@ -144,10 +144,12 @@ function set_parallel_compilation() {
 
 configuration() {
 	local usrpasswd=$1
-	local -a graphics_drivers=("$2")
 	local add_nvidia_hook=$3
+	# Move parameters to read array properly
+	shift 2
+	local -a graphics_drivers=("$@")
 	setup_time
-	install_pcks "${graphics_drivers[@]}" "$add_nvidia_hook"
+	install_pcks "$add_nvidia_hook" "${graphics_drivers[@]}"
 	generate_locale_and_keymaps
 	add_user_and_services "$usrpasswd"
 	setup_hostname
