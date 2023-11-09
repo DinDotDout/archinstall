@@ -139,7 +139,7 @@ function set_parallel_downloads() {
 
 function set_parallel_compilation() {
 	if [ "$parallel_compilation" = true ]; then
-		sudo sed -i 's/^MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
+		sudo sed -i 's/^#MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
 		echo "Multiple procs compilation enabled."
 	else
 		echo "Multiple procs compilation not enabled."
