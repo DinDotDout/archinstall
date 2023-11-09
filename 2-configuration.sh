@@ -17,7 +17,7 @@ setup_time() {
 }
 
 install_pcks() {
-	local add_nvidia_hook=$1
+	local add_nvidia_hook="$1"
 	shift
 	local -a graphics_drivers=("$@")
 	echo "Start reflector..."
@@ -144,10 +144,10 @@ function set_parallel_compilation() {
 
 configuration() {
 	local usrpasswd=$1
-	local add_nvidia_hook=$3
-	# Move parameters to read array properly
+	local add_nvidia_hook=$2
 	shift 2
 	local -a graphics_drivers=("$@")
+
 	setup_time
 	install_pcks "$add_nvidia_hook" "${graphics_drivers[@]}"
 	generate_locale_and_keymaps
