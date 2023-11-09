@@ -44,17 +44,17 @@ get_user_input() {
 	done
 
 	graphics_drivers=""
-	add_nvidia_hook=0
+	add_nvidia_hook=false
 	while true; do
 		read -rp "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
 		case $an in
 		[Nn]*)
-			graphics_drivers="nvidia-dkms nvidia-utils"
-			add_nvidia_hook=1
+			graphics_drivers=(nvidia-dkms nvidia-utils)
+			add_nvidia_hook=true
 			break
 			;;
 		[aA]*)
-			graphics_drivers="lib32-mesa mesa-utils vulkan-radeon lib32-vulkan-radeon libva-mesa-dirver lib32-mesa-dirver xf86-video-amdgpu "
+			graphics_drivers=(lib32-mesa mesa-utils vulkan-radeon lib32-vulkan-radeon libva-mesa-dirver lib32-mesa-dirver xf86-video-amdgpu)
 			break
 			;;
 		[xX]*)
@@ -176,7 +176,7 @@ main() {
 	cp 2-configuration.sh /mnt/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source archinstall/2-configuration.sh;
-      configuration "${usrpasswd}" "${graphics_drivers}" "${add_nvidia_hook}"
+      configuration "${usrpasswd}" "${graphics_drivers[@]}" "${add_nvidia_hook}"
 EOCHROOT
 	find /mnt/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
 	rm -r /mnt/archinstall/

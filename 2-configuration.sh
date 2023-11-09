@@ -6,6 +6,11 @@ hostname="arch_joan"
 username="joan"
 dotfiles="https://github.com/DinDotDout/.dotfiles"
 
+# Set to +1 to allow for more downloads
+parallel_downloads=5
+# Will set to n free processors
+parallel_compilation=true
+
 setup_time() {
 	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
 	hwclock --systohc
@@ -18,7 +23,6 @@ install_pcks() {
 	reflector -c "Spain" -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 	pacman -Syy
 
-	local graphics_drivers=(lib32-mesa mesa-utils vulkan-radeon lib32-vulkan-radeon libva-mesa-dirver lib32-mesa-driver xf86-video-amdgpu)
 	packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet
 		dialog wpa_supplicant mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils
 		inetutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse
@@ -31,7 +35,7 @@ install_pcks() {
 
 	)
 
-	if ((add_nvidia_hook)); then
+	if [ "$add_nvidia_hook" = true ]; then
 		mkdir -p /etc/pacman.d/hooks/
 		cp ./archinstall/resources/nvidia.hook /etc/pacman.d/hooks/nvidia.hook
 	fi
@@ -106,7 +110,7 @@ add_repos() {
 			echo 'Failed to clone dotfiles'
 		}
 	fi
-	#
+
 	# while true; do
 	# 	read -rp "Do you want to clone a repository? (Yy/Nn): " yn
 	# 	case $yn in
@@ -121,12 +125,29 @@ add_repos() {
 	# done
 }
 
+function set_parallel_downloads() {
+	if ((parallel_downloads > 1)); then
+		sudo sed -i "s/^#ParallelDownloads = 5/ParallelDownloads = $parallel_downloads/" /etc/pacman.conf
+		echo "Parallel downloads set to $parallel_downloads."
+	else
+		echo "No pacman parallel downloads set."
+	fi
+}
+function set_parallel_compilation() {
+	if [ "$parallel_compilation" = true ]; then
+		sudo sed -i 's/^MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
+		echo "Multiple procs compilation enabled."
+	else
+		echo "Multiple procs compilation not enabled."
+	fi
+}
+
 configuration() {
 	local usrpasswd=$1
-	local graphics_drivers=$2
+  local -a graphics_drivers=("${2[@]}")
 	local add_nvidia_hook=$3
 	setup_time
-	install_pcks "$graphics_drivers" "$add_nvidia_hook"
+	install_pcks "${graphics_drivers[@]}" "$add_nvidia_hook"
 	generate_locale_and_keymaps
 	add_user_and_services "$usrpasswd"
 	setup_hostname
