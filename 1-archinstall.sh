@@ -148,6 +148,9 @@ installation() {
 }
 
 cleanup_on_fail() {
+	echo "Cleaning up mnt"
+
+	rm -rf /mnt/archinstall/
 	echo "Unmounting all"
 	if [ "$mounted_nvme0n1p3" -eq 1 ]; then
 		umount "/mnt/vm"
@@ -178,8 +181,14 @@ main() {
       source archinstall/2-configuration.sh;
       configuration "${usrpasswd}" "${graphics_drivers[@]}" "${add_nvidia_hook}"
 EOCHROOT
-	find /mnt/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
-	rm -r /mnt/archinstall/
+	exitstatus=$?
+	if [ $exitstatus -ne 0 ]; then
+		exit 1
+	fi
+
+	# find /mnt/archinstall/ -type f -exec shred -u --zero --iterations=3 {} \; # Not needed
+	echo "Cleaning up mnt"
+	rm -rf /mnt/archinstall/
 }
 
 trap cleanup_on_fail ERR
