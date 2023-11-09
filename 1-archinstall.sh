@@ -168,7 +168,11 @@ cleanup() {
 			umount "/mnt/.snapshots"
 			umount "/mnt"
 		fi
+	else
+		echo "Installation done without issues!"
+		echo "You can now reboot"
 	fi
+
 }
 
 main() {
