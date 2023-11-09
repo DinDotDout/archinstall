@@ -57,12 +57,34 @@ generate_locale_and_keymaps() {
 	echo "KEYMAP=$keyboardlayout" >>/etc/vconsole.conf
 }
 
-add_user_and_services() {
+add_user_and_enable_sudo() {
 	local passwd=$1
-	echo "Add user $username"
-	useradd -m -G wheel $username
+	echo "Adding user $username"
+
+	# Create user and add to wheel
+	sudo useradd -m -G wheel $username
+
+	# Set password
 	echo "$username:$passwd" | chpasswd -c DES
 
+	# Add sudo permissions to wheel
+	rule="%wheel ALL=(ALL:ALL) ALL"
+	sudoers_d="/etc/sudoers.d"
+	file="$sudoers_d/wheel"
+
+	# Check if the sudoers.d directory exists and create it if it doesn't
+	if [ ! -d "$sudoers_d" ]; then
+		sudo mkdir "$sudoers_d"
+		sudo chmod 750 "$sudoers_d"
+	fi
+
+	# Add the sudo rule to the file
+	echo "$rule" | sudo tee "$file" >/dev/null
+	# Set recommended permissions on the file
+	sudo chmod 440 "$file"
+}
+
+add_services() {
 	systemctl enable NetworkManager
 	systemctl enable bluetooth
 	systemctl enable cups.service
@@ -88,6 +110,7 @@ install_grub() {
 		echo 'Failed to install GRUB.'
 		exit 1
 	}
+
 	grub-mkconfig -o /boot/grub/grub.cfg || {
 		echo 'Failed to generate GRUB configuration.'
 		exit 1
@@ -157,7 +180,8 @@ configuration() {
 	add_multilib_repos
 	install_pcks "$add_nvidia_hook" "${graphics_drivers[@]}"
 	generate_locale_and_keymaps
-	add_user_and_services "$usrpasswd"
+	add_user_and_enable_sudo "$usrpasswd"
+	add_services
 	setup_hostname
 	install_grub
 	configure_initramfs
