@@ -147,23 +147,27 @@ installation() {
 	timedatectl set-ntp true
 }
 
-cleanup_on_fail() {
-	echo "Cleaning up mnt"
-
+cleanup() {
+	exitstatus=$?
+	echo "Cleaning up mnt/archinstall"
 	rm -rf /mnt/archinstall/
-	echo "Unmounting all"
-	if [ "$mounted_nvme0n1p3" -eq 1 ]; then
-		umount "/mnt/vm"
-	fi
-	if [ "$mounted_nvme0n1p1" -eq 1 ]; then
-		umount "/mnt/boot/efi"
-	fi
-	if [ "$mounted_nvme0n1p2" -eq 1 ]; then
-		umount "/mnt/var/cache"
-		umount "/mnt/home"
-		umount "/mnt/var/log"
-		umount "/mnt/.snapshots"
-		umount "/mnt"
+	# find /mnt/archinstall/ -type f -exec shred -u --zero --iterations=3 {} \; # Not needed
+
+	if [ $exitstatus -ne 0 ]; then
+		echo "Error detected, unmounting all"
+		if [ "$mounted_nvme0n1p3" -eq 1 ]; then
+			umount "/mnt/vm"
+		fi
+		if [ "$mounted_nvme0n1p1" -eq 1 ]; then
+			umount "/mnt/boot/efi"
+		fi
+		if [ "$mounted_nvme0n1p2" -eq 1 ]; then
+			umount "/mnt/var/cache"
+			umount "/mnt/home"
+			umount "/mnt/var/log"
+			umount "/mnt/.snapshots"
+			umount "/mnt"
+		fi
 	fi
 }
 
@@ -181,15 +185,7 @@ main() {
       source archinstall/2-configuration.sh;
       configuration "${usrpasswd}" "${graphics_drivers[@]}" "${add_nvidia_hook}"
 EOCHROOT
-	exitstatus=$?
-	if [ $exitstatus -ne 0 ]; then
-		exit 1
-	fi
-
-	# find /mnt/archinstall/ -type f -exec shred -u --zero --iterations=3 {} \; # Not needed
-	echo "Cleaning up mnt"
-	rm -rf /mnt/archinstall/
 }
 
-trap cleanup_on_fail ERR
+trap cleanup EXIT
 main
