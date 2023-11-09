@@ -12,8 +12,11 @@ parallel_downloads=5
 parallel_compilation=true
 
 setup_time() {
-	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime
-	hwclock --systohc
+	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime hwclock --systohc
+}
+
+add_multilib_repos() {
+	sudo sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
 }
 
 install_pcks() {
@@ -133,6 +136,7 @@ function set_parallel_downloads() {
 		echo "No pacman parallel downloads set."
 	fi
 }
+
 function set_parallel_compilation() {
 	if [ "$parallel_compilation" = true ]; then
 		sudo sed -i 's/^MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
@@ -147,8 +151,10 @@ configuration() {
 	local add_nvidia_hook=$2
 	shift 2
 	local -a graphics_drivers=("$@")
-
+	set_parallel_compilation
+	set_parallel_downloads
 	setup_time
+	add_multilib_repos
 	install_pcks "$add_nvidia_hook" "${graphics_drivers[@]}"
 	generate_locale_and_keymaps
 	add_user_and_services "$usrpasswd"
