@@ -144,7 +144,7 @@ function set_parallel_compilation() {
 
 configuration() {
 	local usrpasswd=$1
-  local -a graphics_drivers=("${2[@]}")
+	local -a graphics_drivers=("$2")
 	local add_nvidia_hook=$3
 	setup_time
 	install_pcks "${graphics_drivers[@]}" "$add_nvidia_hook"
