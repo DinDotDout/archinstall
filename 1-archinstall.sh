@@ -44,11 +44,13 @@ get_user_input() {
 	done
 
 	graphics_drivers=""
+	add_nvidia_hook=0
 	while true; do
 		read -rp "Do you want any graphics drivers? (Nn (Nvidia), Aa (amd) or Xx (None)): " an
 		case $an in
 		[Nn]*)
-			graphics_drivers="nvidia-dkms"
+			graphics_drivers="nvidia-dkms nvidia-utils"
+			add_nvidia_hook=1
 			break
 			;;
 		[aA]*)
@@ -174,7 +176,7 @@ main() {
 	cp 2-configuration.sh /mnt/archinstall/
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source archinstall/2-configuration.sh;
-      configuration "${usrpasswd}" "${graphics_drivers}"
+      configuration "${usrpasswd}" "${graphics_drivers}" "${add_nvidia_hook}"
 EOCHROOT
 	find /mnt/archinstall/ -type f -exec shred --verbose -u --zero --iterations=3 {} \;
 	rm -r /mnt/archinstall/

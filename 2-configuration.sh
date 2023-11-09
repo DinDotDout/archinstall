@@ -13,10 +13,12 @@ setup_time() {
 
 install_pcks() {
 	local graphics_drivers=$1
+	local add_nvidia_hook=$2
 	echo "Start reflector..."
 	reflector -c "Spain" -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 	pacman -Syy
 
+	local graphics_drivers=(lib32-mesa mesa-utils vulkan-radeon lib32-vulkan-radeon libva-mesa-dirver lib32-mesa-driver xf86-video-amdgpu)
 	packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet
 		dialog wpa_supplicant mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils
 		inetutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse
@@ -25,14 +27,15 @@ install_pcks() {
 		xorg-xinit grub-btrfs brightnessctl pacman-contrib git feh curl zsh alacritty neovim
 		firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3
 		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
-		pavucontrol btop papirus-icon-theme
+		pavucontrol btop papirus-icon-theme "${graphics_drivers[@]}"
+
 	)
 
-	if [[ -n "$graphics_drivers" ]]; then
-		packages+=("$graphics_drivers")
+	if ((add_nvidia_hook)); then
 		mkdir -p /etc/pacman.d/hooks/
 		cp ./archinstall/resources/nvidia.hook /etc/pacman.d/hooks/nvidia.hook
 	fi
+
 	pacman --needed --noconfirm -S "${packages[@]}" || {
 		echo 'Failed to install packages.'
 		exit 1
@@ -121,8 +124,9 @@ add_repos() {
 configuration() {
 	local usrpasswd=$1
 	local graphics_drivers=$2
+	local add_nvidia_hook=$3
 	setup_time
-	install_pcks "$graphics_drivers"
+	install_pcks "$graphics_drivers" "$add_nvidia_hook"
 	generate_locale_and_keymaps
 	add_user_and_services "$usrpasswd"
 	setup_hostname
