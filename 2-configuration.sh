@@ -1,4 +1,5 @@
 #!/bin/bash
+# WARN: many options may need to be moved to dofiles repo
 
 keyboardlayout="us"
 zoneinfo="Europe/Madrid"
