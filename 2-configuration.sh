@@ -6,17 +6,35 @@ hostname="arch_joan"
 username="joan"
 dotfiles="https://github.com/DinDotDout/.dotfiles"
 
-# Set to +1 to allow for more downloads
+# Set to more than 1
 parallel_downloads=5
 # Will set to n free processors
 parallel_compilation=true
+
+function set_parallel_downloads() {
+	if ((parallel_downloads > 1)); then
+		sed -i "s/^#ParallelDownloads = 5/ParallelDownloads = $parallel_downloads/" /etc/pacman.conf
+		echo "Parallel downloads set to $parallel_downloads."
+	else
+		echo "No pacman parallel downloads set."
+	fi
+}
+
+function set_parallel_compilation() {
+	if [ "$parallel_compilation" = true ]; then
+		sed -i 's/^#MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
+		echo "Multiple procs compilation enabled."
+	else
+		echo "Multiple procs compilation not enabled."
+	fi
+}
 
 setup_time() {
 	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime hwclock --systohc
 }
 
 add_multilib_repos() {
-	sudo sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
+	sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/^#//' /etc/pacman.conf
 }
 
 install_pcks() {
@@ -62,7 +80,7 @@ add_user_and_enable_sudo() {
 	echo "Adding user $username"
 
 	# Create user and add to wheel
-	sudo useradd -m -G wheel $username
+	useradd -m -G wheel $username
 
 	# Set password
 	echo "$username:$passwd" | chpasswd -c DES
@@ -74,14 +92,14 @@ add_user_and_enable_sudo() {
 
 	# Check if the sudoers.d directory exists and create it if it doesn't
 	if [ ! -d "$sudoers_d" ]; then
-		sudo mkdir "$sudoers_d"
-		sudo chmod 750 "$sudoers_d"
+		mkdir "$sudoers_d"
+		chmod 750 "$sudoers_d"
 	fi
 
 	# Add the sudo rule to the file
-	echo "$rule" | sudo tee "$file" >/dev/null
+	echo "$rule" | tee "$file" >/dev/null
 	# Set recommended permissions on the file
-	sudo chmod 440 "$file"
+	chmod 440 "$file"
 }
 
 add_services() {
@@ -149,24 +167,6 @@ add_repos() {
 	# 	*) echo "Please answer (Yy/Nn)" ;;
 	# 	esac
 	# done
-}
-
-function set_parallel_downloads() {
-	if ((parallel_downloads > 1)); then
-		sudo sed -i "s/^#ParallelDownloads = 5/ParallelDownloads = $parallel_downloads/" /etc/pacman.conf
-		echo "Parallel downloads set to $parallel_downloads."
-	else
-		echo "No pacman parallel downloads set."
-	fi
-}
-
-function set_parallel_compilation() {
-	if [ "$parallel_compilation" = true ]; then
-		sudo sed -i 's/^#MAKEFLAGS="-j[0-9]*".*/MAKEFLAGS="-j$(nproc)"/' /etc/makepkg.conf
-		echo "Multiple procs compilation enabled."
-	else
-		echo "Multiple procs compilation not enabled."
-	fi
 }
 
 configuration() {
