@@ -1,4 +1,6 @@
 #!/bin/bash
+#(C) 2023 Joan Dot Saster, GPL v2.0 or later. No warranty.
+
 # WARN: many options may need to be moved to dofiles repo
 
 keyboardlayout="us"

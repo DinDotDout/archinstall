@@ -1,4 +1,6 @@
 #!/bin/bash
+#(C) 2023 Joan Dot Saster, GPL v2.0 or later. No warranty.
+
 mounted_nvme0n1p1=0
 mounted_nvme0n1p2=0
 mounted_nvme0n1p3=0
