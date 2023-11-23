@@ -48,15 +48,15 @@ install_pcks() {
 	reflector -c "Spain" -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 	pacman -Syy
 
-	packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager network-manager-applet
+	packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager avahi network-manager-applet
 		dialog wpa_supplicant mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils
 		inetutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse
-		pipewire-jack openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset firewalld
+		pipewire-jack openssh rsync reflector acpi acpi_call dnsmasq openbsd-netcat ipset
 		sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop ranger neofetch duf xorg
 		xorg-xinit grub-btrfs brightnessctl pacman-contrib git feh curl zsh alacritty neovim
 		firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3
 		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
-		pavucontrol btop papirus-icon-theme "${graphics_drivers[@]}"
+		pavucontrol btop papirus-icon-theme cronie "${graphics_drivers[@]}"
 	)
 
 	if [ "$add_nvidia_hook" = true ]; then
@@ -113,8 +113,8 @@ add_services() {
 	systemctl enable avahi-daemon
 	systemctl enable reflector.timer
 	systemctl enable fstrim.timer
-	systemctl enable firewalld
 	systemctl enable acpid
+	systemctl enable cronie.service # Scheduler daemon
 }
 
 setup_hostname() {
