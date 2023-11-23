@@ -132,9 +132,12 @@ install_grub() {
 		exit 1
 	}
 
-	# Set my desired grub style
+	# Grub will not show menu by default
 	sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
 	sed -i 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/' /etc/default/grub
+	# Grub will remember last choice
+	sed -i 's/^#GRUB_SAVEDEFAULT=.*/GRUB_SAVEDEFAULT=true/g' /etc/default/grub
+	sed -i 's/^#GRUB_DEFAULT=.*/GRUB_DEFAULT=saved/g' /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg || {
 		echo 'Failed to generate GRUB configuration.'
 		exit 1
