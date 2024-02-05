@@ -1,7 +1,7 @@
 #!/bin/bash
 #(C) 2023 Joan Dot Saster, GPL v2.0 or later. No warranty.
 
-# WARN: many options may need to be moved to dofiles repo
+# WARN: (to myself) many options may need to be moved to dofiles repo
 
 keyboardlayout="us"
 zoneinfo="Europe/Madrid"
@@ -48,6 +48,7 @@ install_pcks() {
 	reflector -c "Spain" -p https -a 3 --sort rate --save /etc/pacman.d/mirrorlist
 	pacman -Syy
 
+	# WARN: Should probably keep only essential pcks here
 	packages=(grub xdg-desktop-portal-wlr efibootmgr networkmanager avahi network-manager-applet
 		dialog wpa_supplicant mtools dosfstools base-devel linux-headers xdg-user-dirs xdg-utils
 		inetutils bluez bluez-utils cups hplip alsa-utils pipewire pipewire-alsa pipewire-pulse
@@ -55,8 +56,8 @@ install_pcks() {
 		sof-firmware nss-mdns acpid os-prober ntfs-3g exa bat htop ranger neofetch duf xorg
 		xorg-xinit grub-btrfs brightnessctl pacman-contrib git feh curl zsh alacritty neovim
 		firefox man-db udisks2 man-pages rofi ripgrep telegram-desktop dunst zip unzip unrar gtk3
-		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight
-		pavucontrol btop papirus-icon-theme breeze cronie "${graphics_drivers[@]}"
+		lxappearance ttf-hack zathura zathura-pdf-mupdf ueberzug sddm mlocate lf filelight ttf-roboto-mono-nerd
+		pavucontrol btop papirus-icon-theme breeze cronie gamemode lib32-gamemode weston "${graphics_drivers[@]}"
 	)
 
 	if [ "$add_nvidia_hook" = true ]; then

@@ -149,6 +149,7 @@ installation() {
 	timedatectl set-ntp true
 }
 
+# Post installation cleanup
 cleanup() {
 	exitstatus=$?
 	echo "Cleaning up mnt/archinstall"
@@ -187,6 +188,7 @@ main() {
 
 	cp -R resources/ /mnt/archinstall/resources/
 	cp 2-configuration.sh /mnt/archinstall/
+	# chroot into system and execute copied install scripts
 	arch-chroot /mnt /bin/bash -- <<EOCHROOT
       source archinstall/2-configuration.sh;
       configuration "${usrpasswd}" "${add_nvidia_hook}" ${graphics_drivers[@]}
