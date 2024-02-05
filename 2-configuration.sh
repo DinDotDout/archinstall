@@ -115,7 +115,8 @@ add_services() {
 	systemctl enable reflector.timer
 	systemctl enable fstrim.timer
 	systemctl enable acpid
-	systemctl enable cronie.service # Scheduler daemon
+	systemctl enable cronie.service # Scheduler daemon (timeshift)
+	systemctl enable grub-btrfsd    # grub-mkconfig on snapshot
 }
 
 setup_hostname() {
