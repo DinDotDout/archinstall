@@ -158,7 +158,7 @@ configure_initramfs() {
 add_repos() {
 	if [ -n "$dotfiles" ]; then
 		echo "Cloning dotfiles"
-		sudo -u $username git clone "$dotfiles" /home/"$username"/.dotfiles || {
+		sudo -u $username git clone --recurse-submodules --depth 1 "$dotfiles" /home/"$username"/.dotfiles || {
 			echo 'Failed to clone dotfiles'
 		}
 	fi
