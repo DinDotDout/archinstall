@@ -34,6 +34,7 @@ function set_parallel_compilation() {
 
 setup_time() {
 	ln -sf /usr/share/zoneinfo/$zoneinfo /etc/localtime hwclock --systohc
+    timedatectl set-timezone $zoneinfo
 }
 
 add_multilib_repos() {
